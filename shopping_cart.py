@@ -21,4 +21,20 @@ products = [
     {"id":20, "name": "Pomegranate Cranberry & Aloe Vera Enrich Drink", "department": "beverages", "aisle": "juice nectars", "price": 4.25}
 ] # based on data from Instacart: https://www.instacart.com/datasets/grocery-shopping-2017
 
-print(products)
+product_id_list = []
+
+while True:
+    product_id = input("Please input a product identifier: ")
+    if product_id == "DONE":
+        break
+    else:
+        matching_products = [product for product in products if str(product["id"]) == str(product_id)]
+        matching_product = matching_products[0]
+        print("CHOSEN PRODUCT: " + matching_product["name"] + " " + str(matching_product["price"]))
+    
+
+print(product_id_list)
+
+# Write a program that asks the user to input one or more product identifiers, 
+# then looks up the prices for each, then prints an itemized customer receipt 
+# including the total amount owed.

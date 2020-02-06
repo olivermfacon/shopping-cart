@@ -4,7 +4,6 @@ def to_usd(price):
     price_usd = "${0:.2f}".format(price)
     return price_usd
 
-
 products = [
     {"id":1, "name": "Chocolate Sandwich Cookies", "department": "snacks", "aisle": "cookies cakes", "price": 3.50},
     {"id":2, "name": "All-Seasons Salt", "department": "pantry", "aisle": "spices seasonings", "price": 4.99},
@@ -29,11 +28,10 @@ products = [
 ] # based on data from Instacart: https://www.instacart.com/datasets/grocery-shopping-2017
 
 product_id_list = []
-price_usd = ""
+divider = "------------------------------"
 total_price = tax_expense = subtotal = 0
 tax_rate = 0.0875
 error_message = "You haver entered an invalid ID. Please try again."
-divider = "------------------------------"
 store_name = "PYTHON GROCERIES"
 web_address = "www.pythongroceries.com"
 phone = "+1(202)763-2634"
@@ -41,9 +39,9 @@ thank_you_note = "Thank you for choosing Python Groceries! Please come again soo
 
 while True:
     product_id = input("Please input a product identifier: ") 
-    if product_id == "DONE":
+    if product_id == "DONE" or product_id == "done":
         break
-    elif product_id != "DONE" and not 1 <= product_id <= len(products):
+    elif not 1 <= product_id <= len(products):
         print(error_message)
     else:
         product_id_list.append(product_id)
@@ -53,7 +51,7 @@ print(store_name)
 print(divider)
 print("Web: " + web_address)
 print("Phone: " + phone)
-print("Checkout time: " + str(datetime.datetime.now()))
+print("Checkout Time: " + str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))) # https://stackoverflow.com/questions/7999935/python-datetime-to-string-without-microsecond-component
 print(divider)
 print("Shopping Cart Items: ")
 
@@ -69,17 +67,10 @@ print(divider)
 tax_expense = subtotal * tax_rate
 total_price = subtotal + tax_expense
 
-# subtotal = " ${0:.2f}".format(subtotal)
-# tax_expense = " ${0:.2f}".format(tax_expense)
-# total_price = " ${0:.2f}".format(total_price)
-
 print("SUBTOTAL: " + to_usd(subtotal))
 print("Plus NYC Sales Tax (8.75%): " + to_usd(tax_expense))
 print("TOTAL PRICE: " + to_usd(total_price))
 print(divider)
 print(thank_you_note)
+print(divider)
 
-
-# Write a program that asks the user to input one or more product identifiers, 
-# then looks up the prices for each, then prints an itemized customer receipt 
-# including the total amount owed.

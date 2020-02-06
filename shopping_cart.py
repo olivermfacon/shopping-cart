@@ -23,11 +23,14 @@ products = [
 
 product_id_list = []
 total_price = 0
+error_message = "You haver entered an invalid ID. Please try again."
 
 while True:
     product_id = input("Please input a product identifier: ") 
     if product_id == "DONE":
         break
+    elif product_id != "DONE" and not 1 <= product_id <= len(products):
+        print(error_message)
     else:
         product_id_list.append(product_id)
 
@@ -36,8 +39,6 @@ for product_id in product_id_list:
     matching_product = matching_products[0]
     total_price = total_price + matching_product["price"]
     print("CHOSEN PRODUCT: " + matching_product["name"] + " " + str(matching_product["price"]))
-
-# print(product_id_list)
 
 print("TOTAL PRICE: " + str(total_price))
 

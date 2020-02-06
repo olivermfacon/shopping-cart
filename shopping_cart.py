@@ -1,3 +1,10 @@
+import datetime
+
+def to_usd(price):
+    price_usd = "${0:.2f}".format(price)
+    return price_usd
+
+
 products = [
     {"id":1, "name": "Chocolate Sandwich Cookies", "department": "snacks", "aisle": "cookies cakes", "price": 3.50},
     {"id":2, "name": "All-Seasons Salt", "department": "pantry", "aisle": "spices seasonings", "price": 4.99},
@@ -22,8 +29,15 @@ products = [
 ] # based on data from Instacart: https://www.instacart.com/datasets/grocery-shopping-2017
 
 product_id_list = []
-total_price = 0
+price_usd = ""
+total_price = tax_expense = subtotal = 0
+tax_rate = 0.0875
 error_message = "You haver entered an invalid ID. Please try again."
+divider = "------------------------------"
+store_name = "PYTHON GROCERIES"
+web_address = "www.pythongroceries.com"
+phone = "+1(202)763-2634"
+thank_you_note = "Thank you for choosing Python Groceries! Please come again soon."
 
 while True:
     product_id = input("Please input a product identifier: ") 
@@ -34,13 +48,37 @@ while True:
     else:
         product_id_list.append(product_id)
 
+print(divider)
+print(store_name)
+print(divider)
+print("Web: " + web_address)
+print("Phone: " + phone)
+print("Checkout time: " + str(datetime.datetime.now()))
+print(divider)
+print("Shopping Cart Items: ")
+
 for product_id in product_id_list:
     matching_products = [product for product in products if str(product["id"]) == str(product_id)]
     matching_product = matching_products[0]
-    total_price = total_price + matching_product["price"]
-    print("CHOSEN PRODUCT: " + matching_product["name"] + " " + str(matching_product["price"]))
+    subtotal = subtotal + matching_product["price"]
+    item_price = "(" + to_usd(matching_product["price"]) + ")"
+    print(" + " + matching_product["name"] + " " + item_price)
 
-print("TOTAL PRICE: " + str(total_price))
+print(divider)
+
+tax_expense = subtotal * tax_rate
+total_price = subtotal + tax_expense
+
+# subtotal = " ${0:.2f}".format(subtotal)
+# tax_expense = " ${0:.2f}".format(tax_expense)
+# total_price = " ${0:.2f}".format(total_price)
+
+print("SUBTOTAL: " + to_usd(subtotal))
+print("Plus NYC Sales Tax (8.75%): " + to_usd(tax_expense))
+print("TOTAL PRICE: " + to_usd(total_price))
+print(divider)
+print(thank_you_note)
+
 
 # Write a program that asks the user to input one or more product identifiers, 
 # then looks up the prices for each, then prints an itemized customer receipt 

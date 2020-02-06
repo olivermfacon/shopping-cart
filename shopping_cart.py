@@ -22,7 +22,6 @@ products = [
 ] # based on data from Instacart: https://www.instacart.com/datasets/grocery-shopping-2017
 
 product_id_list = []
-
 total_price = 0
 
 while True:
@@ -30,11 +29,16 @@ while True:
     if product_id == "DONE":
         break
     else:
-        matching_products = [product for product in products if str(product["id"]) == str(product_id)]
-        matching_product = matching_products[0]
-        total_price = total_price + matching_product["price"]
-        print("CHOSEN PRODUCT: " + matching_product["name"] + " " + str(matching_product["price"]))
-    
+        product_id_list.append(product_id)
+
+for product_id in product_id_list:
+    matching_products = [product for product in products if str(product["id"]) == str(product_id)]
+    matching_product = matching_products[0]
+    total_price = total_price + matching_product["price"]
+    print("CHOSEN PRODUCT: " + matching_product["name"] + " " + str(matching_product["price"]))
+
+# print(product_id_list)
+
 print("TOTAL PRICE: " + str(total_price))
 
 # Write a program that asks the user to input one or more product identifiers, 

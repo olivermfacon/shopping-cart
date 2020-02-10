@@ -1,9 +1,8 @@
 import datetime 
 
 def to_usd(price):
-    price_usd = "${0:.2f}".format(price)
-    return price_usd
-
+    return "${0:.2f}".format(price)
+    
 products = [
     {"id":1, "name": "Chocolate Sandwich Cookies", "department": "snacks", "aisle": "cookies cakes", "price": 3.50, "price_per_pound": 0},
     {"id":2, "name": "All-Seasons Salt", "department": "pantry", "aisle": "spices seasonings", "price": 4.99, "price_per_pound": 0},
@@ -43,7 +42,7 @@ thank_you_note = "Thank you for choosing Python Groceries! Please come again soo
 while True:
     product_id = input("Please input a product identifier: ") 
     if type(product_id) == str:
-        product_id = product_id.lower().title()
+        product_id = product_id.lower().title() 
     if product_id == "Done":
         break
     elif not 1 <= product_id <= len(products):

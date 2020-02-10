@@ -1,4 +1,11 @@
 import datetime
+import os
+from dotenv import load_dotenv
+load_dotenv()
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
+
+
 
 def to_usd(price):
     return "${0:.2f}".format(price) 
@@ -44,6 +51,7 @@ while True:
     elif not 1 <= product_id <= len(products):
         print(error_message)
     else:
+
         if products[product_id-1]["price_per_pound"] > 0:
             num_pounds = input("Enter the amount of " + products[product_id-1]["name"] + " in pounds: ")
             products[product_id-1]["price"] = products[product_id-1]["price_per_pound"] * num_pounds
@@ -78,4 +86,46 @@ print("TOTAL PRICE: " + to_usd(total_price))
 print(divider)
 print(thank_you_note)
 print(divider)
+
+SENDGRID_API_KEY = os.environ.get("SENDGRID_API_KEY", "OOPS, please set env var called 'SENDGRID_API_KEY'")
+MY_ADDRESS = os.environ.get("MY_EMAIL_ADDRESS", "OOPS, please set env var called 'MY_EMAIL_ADDRESS'")
+
+print(SENDGRID_API_KEY)
+
+client = SendGridAPIClient(SENDGRID_API_KEY) #> <class 'sendgrid.sendgrid.SendGridAPIClient>
+print("CLIENT:", type(client))
+
+subject = "Your Receipt from the Green Grocery Store"
+
+html_content = "Hello World"
+
+print("HTML:", html_content)
+
+message = Mail(from_email=MY_ADDRESS, to_emails=MY_ADDRESS, subject=subject, html_content=html_content)
+
+try:
+    response = client.send(message)
+
+    print("RESPONSE:", type(response)) #> <class 'python_http_client.client.Response'>
+    print(response.status_code) #> 202 indicates SUCCESS
+    print(response.body)
+    print(response.headers)
+
+except Exception as e:
+    print("OOPS", e.message)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

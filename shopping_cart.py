@@ -2,7 +2,7 @@ import datetime
 
 def to_usd(price):
     return "${0:.2f}".format(price)
-    
+
 products = [
     {"id":1, "name": "Chocolate Sandwich Cookies", "department": "snacks", "aisle": "cookies cakes", "price": 3.50, "price_per_pound": 0},
     {"id":2, "name": "All-Seasons Salt", "department": "pantry", "aisle": "spices seasonings", "price": 4.99, "price_per_pound": 0},
@@ -28,7 +28,7 @@ products = [
     {"id":22, "name": "Organic Apples", "price": 0, "price_per_pound": 0.6}
 ] # based on data from Instacart: https://www.instacart.com/datasets/grocery-shopping-2017
 
-num_pounds = []
+num_pounds_items = []
 product_id_list = []
 total_price = tax_expense = subtotal = 0
 tax_rate = 0.0875
@@ -40,6 +40,7 @@ phone = "+1(202)763-2634"
 thank_you_note = "Thank you for choosing Python Groceries! Please come again soon."
 
 while True:
+    match = False
     product_id = input("Please input a product identifier: ") 
     if type(product_id) == str:
         product_id = product_id.lower().title() 
@@ -48,13 +49,26 @@ while True:
     elif not 1 <= product_id <= len(products):
         print(error_message)
     else:
+        count = 0
         if products[product_id-1]["price_per_pound"] > 0:
-            weight = input("Enter the amount of " + products[product_id-1]["name"] + " in pounds: ")
-            products[product_id-1]["price"] = products[product_id-1]["price_per_pound"] * weight
-            num_pounds.append(weight)
-        else: 
-            num_pounds.append(0) 
-        product_id_list.append(product_id)
+                weight = input("Enter the amount of " + products[product_id-1]["name"] + " in pounds: ")
+        for ident in product_id_list:
+            if product_id == ident: 
+                match = True
+                if products[product_id-1]["price_per_pound"] > 0:
+                    num_pounds_items[count] += weight
+                    products[product_id-1]["price"] = products[product_id-1]["price_per_pound"] * num_pounds_items[count]
+                else:
+                    num_pounds_items[count] += 1
+            count += 1
+        if match == False:
+            product_id_list.append(product_id)
+            if products[product_id-1]["price_per_pound"] == 0:
+                num_pounds_items.append(1) 
+            else:
+                num_pounds_items.append(weight)
+                products[product_id-1]["price"] = products[product_id-1]["price_per_pound"] * num_pounds_items[count]
+        
         
 print(divider)
 print(store_name)
@@ -72,8 +86,10 @@ for product_id in product_id_list:
     matching_product = matching_products[0]
     subtotal = subtotal + matching_product["price"]
     item_price = "(" + to_usd(matching_product["price"]) + ")"
-    if num_pounds[count] > 0:
-        print(" + (" + str(num_pounds[count]) + "lbs) " + matching_product["name"] + " " + item_price)
+    if matching_product["price_per_pound"] > 0:
+        print(" + (" + str(num_pounds_items[count]) + "lbs) " + matching_product["name"] + " " + item_price)
+    elif num_pounds_items[count] > 1:
+        print(" + " + str(num_pounds_items[count]) + "x " + matching_product["name"] + " " + item_price)
     else:
         print(" + " + matching_product["name"] + " " + item_price)
     count += 1 

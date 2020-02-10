@@ -41,34 +41,37 @@ thank_you_note = "Thank you for choosing Python Groceries! Please come again soo
 
 while True:
     match = False
-    product_id = input("Please input a product identifier: ") 
-    if type(product_id) == str:
-        product_id = product_id.lower().title() 
-    if product_id == "Done":
+    product_id = input("Please input a product identifier: ")  #entering product IDs
+    product_id = product_id.lower().title() 
+    if product_id == "Done": #break when done
         break
-    elif not 1 <= product_id <= len(products):
-        print(error_message)
-    else:
-        count = 0
-        if products[product_id-1]["price_per_pound"] > 0:
-                weight = input("Enter the amount of " + products[product_id-1]["name"] + " in pounds: ")
-        for ident in product_id_list:
-            if product_id == ident: 
-                match = True
-                if products[product_id-1]["price_per_pound"] > 0:
-                    num_pounds_items[count] += weight
-                    products[product_id-1]["price"] = products[product_id-1]["price_per_pound"] * num_pounds_items[count]
-                else:
-                    num_pounds_items[count] += 1
-            count += 1
-        if match == False:
-            product_id_list.append(product_id)
-            if products[product_id-1]["price_per_pound"] == 0:
-                num_pounds_items.append(1) 
+    else: 
+        try:
+            int_id = int(product_id) # try convert to an int and if fails, ID is a string but not "Done"
+            if not 1 <= int_id <= len(products): 
+                print(error_message)
             else:
-                num_pounds_items.append(weight)
-                products[product_id-1]["price"] = products[product_id-1]["price_per_pound"] * num_pounds_items[count]
-        
+                count = 0
+                if products[int(product_id)-1]["price_per_pound"] > 0: #i.e if the item is priced per pound
+                    weight = input("Enter the amount of " + products[int(product_id)-1]["name"] + " in pounds: ")
+                for ident in product_id_list:
+                    if int(product_id) == ident: #check to see if the item has been scanned already 
+                        match = True
+                        if products[int(product_id)-1]["price_per_pound"] > 0:
+                            num_pounds_items[count] += float(weight) # needed if weighing two bags of bananas independently
+                            products[int(product_id)-1]["price"] = products[int(product_id)-1]["price_per_pound"] * float(num_pounds_items[count])
+                        else:
+                            num_pounds_items[count] += 1 #increments the number of specified item if scanned twice 
+                    count += 1
+                if match == False:
+                    product_id_list.append(int(product_id)) #append the item ID if it has not been scanned already 
+                    if products[int(product_id)-1]["price_per_pound"] == 0:
+                        num_pounds_items.append(1) 
+                    else:
+                        num_pounds_items.append(float(weight))
+                        products[int(product_id)-1]["price"] = products[int(product_id)-1]["price_per_pound"] * float(num_pounds_items[count])
+        except ValueError:
+            print("Invalid entry. Please try again!") #printed when "done" isnt entered or integer is not in product ID range 
         
 print(divider)
 print(store_name)

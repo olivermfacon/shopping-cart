@@ -8,7 +8,8 @@ cd ~/Desktop/shopping-cart
 
 ## Setup
 No Packages to install
-Create a virtual environment named 'shopping' for example
+
+Create a virtual environment named 'shopping' (for example)
 ```sh
 conda create -n shopping-env python=3.7
 ```

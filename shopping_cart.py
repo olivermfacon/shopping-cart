@@ -23,17 +23,15 @@ products = [
     {"id":17, "name": "Rendered Duck Fat", "department": "meat seafood", "aisle": "poultry counter", "price": 9.99, "price_per_pound": 0},
     {"id":18, "name": "Pizza for One Suprema Frozen Pizza", "department": "frozen", "aisle": "frozen pizza", "price": 12.50, "price_per_pound": 0},
     {"id":19, "name": "Gluten Free Quinoa Three Cheese & Mushroom Blend", "department": "dry goods pasta", "aisle": "grains rice dried goods", "price": 3.99, "price_per_pound": 0},
-    {"id":20, "name": "Pomegranate Cranberry & Aloe Vera Enrich Drink", "department": "beverages", "aisle": "juice nectars", "price": 4.25, "price_per_pound": 0},
-    {"id":21, "name": "Organic Bananas", "price": 0, "price_per_pound": 0.79}, # Organic Bananas and Apples were added for the extra challenges section
-    {"id":22, "name": "Organic Apples", "price": 0, "price_per_pound": 0.6}
+    {"id":20, "name": "Pomegranate Cranberry & Aloe Vera Enrich Drink", "department": "beverages", "aisle": "juice nectars", "price": 4.25, "price_per_pound": 0}
 ] # based on data from Instacart: https://www.instacart.com/datasets/grocery-shopping-2017
 
-num_pounds_items = []
 product_id_list = []
+valid_ids = [str(p["id"]) for p in products]
 total_price = tax_expense = subtotal = 0
 tax_rate = 0.0875
 divider = "------------------------------"
-error_message = "You haver entered an invalid ID. Please try again."
+error_message = "Invalid entry. Please try again."
 store_name = "PYTHON GROCERIES"
 web_address = "www.pythongroceries.com"
 phone = "+1(202)763-2634"
@@ -45,33 +43,10 @@ while True:
     product_id = product_id.lower().title() 
     if product_id == "Done": #break when done
         break
-    else: 
-        try:
-            int_id = int(product_id) # try convert to an int and if fails, ID is a string but not "Done"
-            if not 1 <= int_id <= len(products): 
-                print(error_message)
-            else:
-                count = 0
-                if products[int(product_id)-1]["price_per_pound"] > 0: #i.e if the item is priced per pound
-                    weight = input("Enter the amount of " + products[int(product_id)-1]["name"] + " in pounds: ")
-                for ident in product_id_list:
-                    if int(product_id) == ident: #check to see if the item has been scanned already 
-                        match = True
-                        if products[int(product_id)-1]["price_per_pound"] > 0:
-                            num_pounds_items[count] += float(weight) # needed if weighing two bags of bananas independently
-                            products[int(product_id)-1]["price"] = products[int(product_id)-1]["price_per_pound"] * float(num_pounds_items[count])
-                        else:
-                            num_pounds_items[count] += 1 #increments the number of specified item if scanned twice 
-                    count += 1
-                if match == False:
-                    product_id_list.append(int(product_id)) #append the item ID if it has not been scanned already 
-                    if products[int(product_id)-1]["price_per_pound"] == 0:
-                        num_pounds_items.append(1) 
-                    else:
-                        num_pounds_items.append(float(weight))
-                        products[int(product_id)-1]["price"] = products[int(product_id)-1]["price_per_pound"] * float(num_pounds_items[count])
-        except ValueError:
-            print("Invalid entry. Please try again!") #printed when "done" isnt entered or integer is not in product ID range 
+    elif product_id not in valid_ids: 
+        print(error_message)
+    else:
+        product_id_list.append(int(product_id))
         
 print(divider)
 print(store_name)
@@ -82,20 +57,12 @@ print("Checkout Time: " + str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%
 print(divider)
 print("Shopping Cart Items: ")
 
-count = 0
-
-for product_id in product_id_list:
+for product_id in product_id_list: 
     matching_products = [product for product in products if str(product["id"]) == str(product_id)]
     matching_product = matching_products[0]
     subtotal = subtotal + matching_product["price"]
     item_price = "(" + to_usd(matching_product["price"]) + ")"
-    if matching_product["price_per_pound"] > 0:
-        print(" + (" + str(num_pounds_items[count]) + "lbs) " + matching_product["name"] + " " + item_price)
-    elif num_pounds_items[count] > 1:
-        print(" + " + str(num_pounds_items[count]) + "x " + matching_product["name"] + " " + item_price)
-    else:
-        print(" + " + matching_product["name"] + " " + item_price)
-    count += 1 
+    print(" + " + matching_product["name"] + " " + item_price)
 
 print(divider)
 
@@ -108,7 +75,6 @@ print("TOTAL PRICE: " + to_usd(total_price))
 print(divider)
 print(thank_you_note)
 print(divider)
-
 
 
 
